@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of Users</title>
+    <style>
+      body {
+        font-weight: bold;
+        font-family: "Pacifico", cursive;
+        color: white;
+        text-shadow: -1.2px -1.2px 0 black, 1.2px -1.2px 0 black,
+          -1.2px 1.2px 0 black, 1.2px 1.2px 0 black;
+        background-image: url(https://cdn.pixabay.com/photo/2016/10/22/17/06/gradient-1761190_1280.jpg);
+      }
+
+      h1 {
+        font-size: 48px;
+        color: white;
+        text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black,
+          2px 2px 0 black;
+        margin-bottom: 10px;
+      }
+
+      .container {
+        border-radius: 10px;
+        padding: 10px;
+
+        margin: auto;
+        max-width: 150px;
+      }
+      .container input {
+        width: 100%;
+        margin-left: -2px;
+        box-sizing: border-box;
+        border-radius: 5px;
+      }
+      #button {
+        margin-top: 10px;
+        background-color: lightblue;
+        cursor: pointer;
+      }
+      #title {
+        text-align: center;
+        font-family: "Pacifico", cursive;
+      }
+      table {
+        border-spacing: 0;
+        border-collapse: separate;
+        border-radius: 10px;
+        border: 1px solid black;
+        border-top: none;
+        margin-left: 3%;
+        margin-right: 3%;
+      }
+
+      th {
+        background-color: lightblue;
+        width: 10%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border: 1px solid black;
+      }
+      th:first-child {
+        border-left: none;
+      }
+      th:last-child {
+        border-right: none;
+      }
+      td {
+        font-family: sans-serif;
+        width: 10%;
+        padding: 3px;
+        border-top: solid black;
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+      }
+      td:first-child {
+        border-left: none;
+        border-bottom-left-radius: 8px;
+      }
+      td:last-child {
+        border-right: none;
+        border-bottom-right-radius: 8px;
+      }
+
+      #clearbutton {
+        background-color: lightgray;
+        border-radius: 10px;
+        margin-left: 25px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">List of Users</h1>
+
+    <div class="container">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" />
+
+      <label for="surname">Surname</label>
+      <input type="text" id="surname" name="surname" />
+
+      <label for="age">Age</label>
+      <input type="text" id="age" name="age" />
+
+      <label for="sex">Sex</label>
+      <input type="text" id="sex" name="sex" />
+
+      <label for="email">Email</label>
+      <input type="text" id="email" name="email" />
+      <input type="button" id="button" onclick="AddRow()" value="ADD" />
+      <button id="clearbutton" onclick="clearLocalStorage()">
+        Clear Storage
+      </button>
+    </div>
+
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Age</th>
+          <th>Sex</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      function clearLocalStorage() {
+        localStorage.clear();
+        alert("Local storage has been cleared.");
+      }
+
+      let users = [];
+
+      const storedUsers = localStorage.getItem("users");
+
+      if (storedUsers) {
+        users = JSON.parse(storedUsers);
+      } else {
+        users = [
+          {
+            name: "Jan",
+            surname: "Kowalski",
+            age: "20",
+            sex: "male",
+            email: "jankowalski@gmail.com",
+          },
+        ];
+
+        function AddRow() {
+          var name = document.getElementById("name").value;
+          var surname = document.getElementById("surname").value;
+          var age = document.getElementById("age").value;
+          var sex = document.getElementById("sex").value;
+          var email = document.getElementById("email").value;
+
+          if (
+            name === "" ||
+            surname === "" ||
+            age === "" ||
+            sex === "" ||
+            email === ""
+          ) {
+            alert("Fill all fields, then click ''ADD''");
+            return;
+          }
+
+          if (!email.includes("@")) {
+            alert("Be sure email is correct!");
+            return;
+          }
+
+          if (isNaN(age)) {
+            alert("Age must be numerical!");
+            return;
+          }
+
+          var newUser = {
+            name: name,
+            surname: surname,
+            age: age,
+            sex: sex,
+            email: email,
+          };
+          users.push(newUser);
+
+          localStorage.setItem("users", JSON.stringify(users));
+          var table = document
+            .getElementById("userTable")
+            .getElementsByTagName("tbody")[0];
+          var newRow = table.insertRow();
+          var cells = [name, surname, age, sex, email];
+
+          cells.forEach((cellContent) => {
+            var cell = newRow.insertCell();
+            cell.textContent = cellContent;
+          });
+        }
+      }
+
+      console.log(users);
+
+      const userTable = document
+        .getElementById("userTable")
+        .getElementsByTagName("tbody")[0];
+      users.forEach((user) => {
+        const row = userTable.insertRow();
+        const cells = [user.name, user.surname, user.age, user.sex, user.email];
+
+        cells.forEach((cellContent) => {
+          const cell = row.insertCell();
+          cell.textContent = cellContent;
+        });
+      });
+    </script>
+  </body>
+</html>
